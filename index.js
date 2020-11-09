@@ -3,6 +3,7 @@ const express = require('express')
 const path = require('path')
 const sequelize = require('./utils/database')
 const todoRoutes = require('./routes/todo')
+const Todo = require('./models/todo')
 const app = express()
 const PORT = process.env.PORT || 3000
 
