@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <style>
+    .done {
+      text-decoration: line-through;
+    }
+    [v-cloak] {
+      display: none;
+    }
+  </style>
+  <title>Задачи</title>
+</head>
+<body>
+<div id="app" v-cloak>
+<!--  <v-app :dark="isDark">-->
+<!--      <v-toolbar dark >-->
+<!--      <v-app-bar-nav-icon></v-app-bar-nav-icon>-->
+<!--      <v-toolbar-title class="headline">Список дел</v-toolbar-title>-->
+
+<!--      <v-spacer></v-spacer>-->
+
+
+
+<!--    </v-toolbar>-->
+
+<!--  </v-app>-->
+
+  <v-app>
+    <v-main>
+      <template>
+        <div>
+        <v-toolbar>
+          <v-app-bar-nav-icon></v-app-bar-nav-icon>
+
+          <v-toolbar-title>Список задач</v-toolbar-title>
+
+          <v-spacer></v-spacer>
+
+            <v-switch class="mt-4"
+              v-model="$vuetify.theme.dark"
+              label="Темная тема"
+            ></v-switch>
+        </v-toolbar>
+      </div>
+      </template>
+      <v-container>
+        <v-layout row justify-center>
+          <v-flex xs12>
+            <v-card>
+              <v-list two-line subheader>
+                <v-container>
+                  <v-subheader class="headline">
+                    {{new Date() | date}}
+                  </v-subheader>
+                  <v-spacer></v-spacer>
+
+                  <p class="text-xs-right">Задач: <b>{{todos.length}}</b></p>
+
+                  <v-flex xs12>
+                    <v-text-field
+                      clearable
+                      v-model="todoTitle"
+                      id="newTodo"
+                      name="newTodo"
+                      label="Введите название задачи"
+                      @keyup.enter="addTodo"
+                    >
+                    </v-text-field>
+                  </v-flex>
+                </v-container>
+                <v-subheader class="subheading" v-if="todos.length === 0">
+                  У вас 0 задач, добавьте новую
+                </v-subheader>
+                <v-subheader class="subheading" v-else>
+                  Ваши задачи
+                </v-subheader>
+                <div v-for="(todo, i) in todos" :key="i" class="p-3">
+                  <v-row class="d-flex align-center px-5">
+                      <v-checkbox
+                        v-if="!todo.done"
+                        v-model="todo.done"
+                      ></v-checkbox>
+                      <div :class="{done: todo.done}">
+                        {{todo.title | capitalize}}
+                      </div>
+                    <v-spacer></v-spacer>
+                      <div>
+                        Добавлено в: {{todo.date | date}}
+                      </div>
+                      <v-btn icon ripple color="red" @click="removeTodo(todo.id)">
+                        <v-icon class="white--text">close</v-icon>
+                      </v-btn>
+                  </v-row>
+                </div>
+              </v-list>
+            </v-card>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </v-main>
+  </v-app>
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+<script>
+  new Vue({
+    el: '#app',
+    vuetify: new Vuetify({
+      theme: { dark: true },
+    }),
+    data() {
+      return {
+        show: true,
+        todoTitle: '',
+        todos: []
+      }
+    },
+    methods: {
+      addTodo() {
+        const title = this.todoTitle.trim()
+        if (!title) {
+          return
+        }
+        this.todos.push({
+          title: title,
+          id: Math.random(),
+          done: false,
+          date: new Date()
+        })
+        this.todoTitle = ''
+      },
+      removeTodo(id) {
+        this.todos = this.todos.filter(t => t.id !== id)
+      }
+    },
+    filters: {
+      capitalize(value) {
+        return value.toString().charAt(0).toUpperCase() + value.slice(1)
+      },
+      date(value) {
+        return new Intl.DateTimeFormat('ru-RU', {
+          year: 'numeric',
+          month: 'long',
+          day: '2-digit'
+        }).format(new Date(value))
+      }
+    }
+  })
+</script>
+</body>
+</html>
