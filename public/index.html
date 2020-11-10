@@ -66,25 +66,36 @@
                 <v-subheader class="subheading" v-else>
                   Ваши задачи
                 </v-subheader>
-                <div v-for="(todo, i) in todos" :key="i" class="p-3">
-                  <v-row class="d-flex align-center px-5">
+                <v-list>
+                <v-list-item v-for="(todo, i) in todos" :key="i" class="p-3">
+                  <div class="d-flex align-center px-5">
                       <v-checkbox
                         v-if="!todo.done"
                         v-model="todo.done"
+                        @change="completeTodo(todo.id)"
                       ></v-checkbox>
-                      <div :class="{done: todo.done}">
-                        {{todo.title | capitalize}}
-                      </div>
-                    <v-spacer></v-spacer>
-                      <div>
-                        Добавлено в: {{todo.date | date}}
-                      </div>
-                      <v-btn icon ripple color="red" @click="removeTodo(todo.id)">
+                        <v-flex>
+                        <v-list-item-title :class="{done: todo.done}">
+                          {{todo.title | capitalize}}
+                        </v-list-item-title>
+                          <v-chip label>
+                            <v-icon left>
+                              mdi-calendar
+                            </v-icon>
+                            Добавлено: {{todo.createdAt | date(true) }}</v-chip>
+                          <v-chip label>
+                            <v-icon left>
+                              mdi-calendar
+                            </v-icon>
+                            Изменено: {{todo.updatedAt | date(true) }}</v-chip>
+                        </v-flex>
+
+                    <v-btn icon ripple color="red" @click="removeTodo(todo.id)">
                         <v-icon class="white--text">close</v-icon>
                       </v-btn>
-                  </v-row>
-                </div>
-              </v-list>
+                  </div>
+                </v-list-item>
+                </v-list>
             </v-card>
           </v-flex>
         </v-layout>
